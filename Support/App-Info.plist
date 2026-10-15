@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key><string>io.github.OutTuna.EncoMenu</string>
+    <key>CFBundleName</key><string>Enco</string>
+    <key>CFBundleDisplayName</key><string>Enco</string>
+    <key>CFBundleExecutable</key><string>Enco</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleShortVersionString</key><string>0.2.0</string>
+    <key>CFBundleVersion</key><string>2</string>
+    <key>CFBundleIconFile</key><string>AppIcon</string>
+    <key>LSMinimumSystemVersion</key><string>13.0</string>
+    <key>LSUIElement</key><true/>
+    <key>NSHighResolutionCapable</key><true/>
+    <key>NSBluetoothAlwaysUsageDescription</key><string>Enco connects to your OPPO earbuds to show battery levels and control noise cancellation.</string>
+    <key>SUFeedURL</key><string>https://raw.githubusercontent.com/OutTuna/Cracked-Oneplus_buds/main/appcast.xml</string>
+    <key>SUPublicEDKey</key><string>ZLQCy9nD3iT5/QC9kZ01uQHwuSPwQ9U1vKqYqVgm354=</string>
+    <key>SUEnableAutomaticChecks</key><true/>
+    <key>SUAutomaticallyUpdate</key><true/>
+    <key>SUAllowsAutomaticUpdates</key><true/>
+    <key>SUVerifyUpdateBeforeExtraction</key><true/>
+    <key>SUScheduledCheckInterval</key><integer>86400</integer>
+    <key>SUEnableInstallerLauncherService</key><true/>
+</dict>
+</plist>

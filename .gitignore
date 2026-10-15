@@ -3,3 +3,6 @@
 *.jsonl
 .DS_Store
 bin/
+*.app/
+*.dmg
+*.zip
