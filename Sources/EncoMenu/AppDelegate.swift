@@ -8,8 +8,7 @@ import Combine
     var updates: UpdateController!
     private var statusItem: NSStatusItem!
     private let popover = NSPopover()
-    private var settingsWindow: NSWindow?
-    private var aboutWindow: NSWindow?
+    private let navigation = PanelNavigation()
     private var onboardingWindow: NSWindow?
     private var subscriptions = Set<AnyCancellable>()
     private var closing = false
@@ -33,8 +32,8 @@ import Combine
         popover.behavior = .transient
         popover.animates = true
         popover.delegate = self
-        let controller = NSHostingController(rootView: PopoverView(model: model, preferences: preferences,
-            onSettings: { [weak self] in self?.showSettings() }, onAbout: { [weak self] in self?.showAbout() }))
+        let controller = NSHostingController(rootView: PanelView(model: model, preferences: preferences,
+            updates: updates, navigation: navigation))
         controller.sizingOptions = [.preferredContentSize]
         popover.contentViewController = controller
         popover.contentSize = NSSize(width: 352, height: 520)
@@ -155,20 +154,13 @@ import Combine
     }
 
     @objc func showSettings() {
-        beginClose()
-        if settingsWindow == nil {
-            settingsWindow = window(title: "Settings", size: NSSize(width: 440, height: 435),
-                rootView: SettingsView(preferences: preferences, updates: updates) { [weak self] in self?.showAbout() })
-        }
-        present(settingsWindow)
+        navigation.page = .settings
+        showPopover()
     }
 
     @objc func showAbout() {
-        beginClose()
-        if aboutWindow == nil {
-            aboutWindow = window(title: "About Enco", size: NSSize(width: 350, height: 350), rootView: AboutView(updates: updates, model: model))
-        }
-        present(aboutWindow)
+        navigation.showAbout()
+        showPopover()
     }
 
     @objc private func quit() { NSApp.terminate(nil) }

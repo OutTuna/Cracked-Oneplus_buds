@@ -6,13 +6,13 @@
     <description>Enco for macOS</description>
     <language>en</language>
     <item>
-      <title>Enco 0.2.0</title>
+      <title>Enco 0.2.1</title>
       <pubDate>Thu, 15 Oct 2026 12:00:00 +0000</pubDate>
-      <sparkle:version>2</sparkle:version>
-      <sparkle:shortVersionString>0.2.0</sparkle:shortVersionString>
+      <sparkle:version>3</sparkle:version>
+      <sparkle:shortVersionString>0.2.1</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <description>Native menu bar controls, separate earbud batteries, official product artwork, appearance settings and signed updates.</description>
-      <enclosure url="https://github.com/OutTuna/Cracked-Oneplus_buds/releases/download/v0.2.0/Enco-0.2.0-macOS-arm64.zip" sparkle:edSignature="ZfohrLWGG7pdaPhpQBGz++44x8EltOOnLMpoAPEEQE1sDb5upC4Tj9G9C0cUUvhhWkLNuR+RVG2tHJQ9kN74AA==" length="10338622" type="application/octet-stream"/>
+      <description>Settings and About now open inside the menu bar panel with back navigation.</description>
+      <enclosure url="https://github.com/OutTuna/Cracked-Oneplus_buds/releases/download/v0.2.1/Enco-0.2.1-macOS-arm64.zip" sparkle:edSignature="Lu2ZVY91w0HCjDK0z6Uywhee/3c2xpkJvz8pYYPb4wv61vf3M51boocSWBAeQD/kSpBonOeOIUBU3BBmyQhsBA==" length="10352424" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>

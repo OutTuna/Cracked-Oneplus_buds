@@ -80,6 +80,59 @@ struct BatteryRing: View {
     }
 }
 
+enum PanelPage { case earbuds, settings, about }
+
+final class PanelNavigation: ObservableObject {
+    @Published var page: PanelPage = .earbuds
+    var aboutParent: PanelPage = .earbuds
+    func showAbout() { aboutParent = page; page = .about }
+}
+
+struct PanelView: View {
+    @ObservedObject var model: EarbudsModel
+    @ObservedObject var preferences: Preferences
+    @ObservedObject var updates: UpdateController
+    @ObservedObject var navigation: PanelNavigation
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        ZStack {
+            switch navigation.page {
+            case .earbuds:
+                PopoverView(model: model, preferences: preferences,
+                            onSettings: { navigation.page = .settings }, onAbout: { navigation.showAbout() })
+            case .settings:
+                VStack(spacing: 0) {
+                    header("Settings") { navigation.page = .earbuds }
+                    SettingsView(preferences: preferences, updates: updates, onAbout: { navigation.showAbout() })
+                    Spacer(minLength: 0)
+                }
+            case .about:
+                VStack(spacing: 0) {
+                    header("About Enco") { navigation.page = navigation.aboutParent }
+                    Spacer(minLength: 0)
+                    AboutView(updates: updates, model: model)
+                    Spacer(minLength: 0)
+                }
+            }
+        }
+        .frame(width: 352, height: 530, alignment: .top)
+        .background(GlassBackground())
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.18), value: navigation.page)
+    }
+
+    private func header(_ title: String, back: @escaping () -> Void) -> some View {
+        HStack(spacing: 10) {
+            Button(action: back) {
+                Image(systemName: "chevron.left").font(.system(size: 14, weight: .semibold))
+                    .frame(width: 28, height: 28).contentShape(Rectangle())
+            }.buttonStyle(.plain).accessibilityLabel("Back").keyboardShortcut(.cancelAction)
+            Text(title).font(.system(size: 17, weight: .semibold))
+            Spacer()
+        }.padding(.horizontal, 16).padding(.top, 20).padding(.bottom, 12)
+    }
+}
+
 struct PopoverView: View {
     @ObservedObject var model: EarbudsModel
     @ObservedObject var preferences: Preferences
@@ -159,14 +212,14 @@ struct FinishChoices: View {
         HStack(spacing: 10) {
             ForEach(EarbudFinish.allCases) { finish in
                 Button { selection = finish } label: {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 6) {
                         Circle().fill(Color(nsColor: finish.color)).frame(width: 20, height: 20)
                             .overlay(Circle().strokeBorder(Color.primary.opacity(0.15), lineWidth: 0.5))
-                        Text(finish.title).font(.system(size: 12, weight: .medium))
+                        Text(finish.title).font(.system(size: 11, weight: .medium)).fixedSize()
                         Spacer(minLength: 0)
                         if selection == finish { Image(systemName: "checkmark.circle.fill").font(.system(size: 13)).foregroundStyle(.primary) }
                     }
-                    .padding(12).frame(maxWidth: .infinity)
+                    .padding(9).frame(maxWidth: .infinity)
                     .background(RoundedRectangle(cornerRadius: 12).fill(Color.primary.opacity(selection == finish ? 0.065 : 0.025)))
                     .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Color.primary.opacity(selection == finish ? 0.4 : 0.1), lineWidth: selection == finish ? 1 : 0.5))
                 }.buttonStyle(.plain).accessibilityAddTraits(selection == finish ? .isSelected : [])
@@ -202,7 +255,6 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
-            Text("Settings").font(.system(size: 22, weight: .semibold))
             VStack(alignment: .leading, spacing: 10) {
                 Text("Earbud finish").font(.system(size: 12, weight: .medium))
                 FinishChoices(selection: $preferences.finish)
@@ -230,7 +282,7 @@ struct SettingsView: View {
                 Button("About Enco", action: onAbout).buttonStyle(.link)
             }
         }
-        .padding(28).frame(width: 440).background(GlassBackground())
+        .padding(.horizontal, 20).padding(.vertical, 8).frame(width: 352).background(GlassBackground())
     }
 }
 
@@ -253,7 +305,7 @@ struct AboutView: View {
             Text(updates.lastCheck == "Not yet checked" ? updates.lastCheck : "Last checked \(updates.lastCheck)")
                 .font(.system(size: 10)).foregroundStyle(.tertiary)
         }
-        .padding(30).frame(width: 350).background(GlassBackground())
+        .padding(20).frame(width: 352).background(GlassBackground())
     }
 }
 
