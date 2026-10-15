@@ -2,6 +2,13 @@ import AppKit
 
 enum Artwork {
     static func icon(_ style: MenuBarIcon, side: Int? = nil) -> NSImage {
+        if style == .earbuds, side == nil,
+           let symbol = NSImage(systemSymbolName: "earbuds", accessibilityDescription: "Enco earbuds") {
+            let image = symbol.withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 16, weight: .medium)) ?? symbol
+            image.size = NSSize(width: 23, height: 18)
+            image.isTemplate = true
+            return image
+        }
         let image = NSImage(size: NSSize(width: 22, height: 20), flipped: false) { _ in
             NSColor.black.setFill()
             NSColor.black.setStroke()

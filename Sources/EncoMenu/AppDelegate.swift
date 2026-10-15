@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 import Combine
+import EncoCore
 
 @MainActor final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     let model = EarbudsModel()
@@ -18,10 +19,10 @@ import Combine
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
         updates = UpdateController()
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem.button {
             button.image = Artwork.icon(preferences.menuIcon)
-            button.imagePosition = .imageOnly
+            button.imagePosition = .imageLeading
             button.toolTip = "Enco Air5 Pro"
             button.target = self
             button.action = #selector(statusPressed(_:))
@@ -29,6 +30,9 @@ import Combine
             button.setAccessibilityLabel("Enco Air5 Pro")
         }
         preferences.$menuIcon.sink { [weak self] icon in self?.statusItem?.button?.image = Artwork.icon(icon) }.store(in: &subscriptions)
+        model.$batteries.combineLatest(model.$connected).sink { [weak self] batteries, connected in
+            self?.updateStatusBattery(batteries, connected: connected)
+        }.store(in: &subscriptions)
         popover.behavior = .transient
         popover.animates = true
         popover.delegate = self
@@ -46,6 +50,26 @@ import Combine
         updates.start()
         model.start()
         if !preferences.hasChosenFinish { showOnboarding() } else { showPopover() }
+    }
+
+    private func updateStatusBattery(_ batteries: [UInt8: BatteryEntry], connected: Bool) {
+        guard let button = statusItem.button else { return }
+        let level: (UInt8) -> String = { type in
+            guard connected, let entry = batteries[type], let percent = entry.percent else { return "—" }
+            return "\(percent)%"
+        }
+        let left = level(1), right = level(2)
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.alignment = .left
+        paragraph.minimumLineHeight = 10
+        paragraph.maximumLineHeight = 10
+        button.attributedTitle = NSAttributedString(string: " L \(left)\n R \(right)", attributes: [
+            .font: NSFont.monospacedDigitSystemFont(ofSize: 9, weight: .medium),
+            .foregroundColor: NSColor.labelColor,
+            .paragraphStyle: paragraph
+        ])
+        button.toolTip = "Enco Air5 Pro · Left \(left) · Right \(right)"
+        button.setAccessibilityLabel("Enco Air5 Pro, left battery \(left), right battery \(right)")
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
