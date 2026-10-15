@@ -69,7 +69,7 @@ public struct NoiseState: Equatable {
         }
     }
     public var capturedMode: ANCMode? {
-        switch activeIndices { case [3]: return .on; case [4]: return .transparency; case [8]: return .off; default: return nil }
+        switch activeIndices { case [3]: return .off; case [4]: return .on; case [8]: return .transparency; default: return nil }
     }
     public static func parse(_ data: [UInt8]) throws -> NoiseState {
         guard data.count >= 3, data[0] == 1, data[1] == 1 else { throw ProtocolError.unsupportedHeader }

@@ -77,6 +77,6 @@ public extension Collection where Element == UInt8 {
 public enum ANCMode: String, CaseIterable {
     case on, off, transparency
     public var wireValue: UInt8 {
-        switch self { case .on: return 1; case .off: return 4; case .transparency: return 2 }
+        switch self { case .on: return 2; case .off: return 1; case .transparency: return 4 }
     }
 }

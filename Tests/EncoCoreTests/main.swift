@@ -46,7 +46,7 @@ final class ProtocolChecks {
     }
 
     func testANCMatchesCapturedCommands() throws {
-        for (mode, sequence, capture) in [(ANCMode.on, UInt8(0x28), 2), (.off, 0x2B, 4), (.transparency, 0x2E, 6)] {
+        for (mode, sequence, capture) in [(ANCMode.off, UInt8(0x28), 2), (.transparency, 0x2B, 4), (.on, 0x2E, 6)] {
             checkEqual(try Packet(command: 0x0404, sequence: sequence, payload: [1, 1, mode.wireValue]).encoded(), bytes(captures[capture]))
         }
     }
@@ -111,9 +111,9 @@ final class ProtocolChecks {
         checkEqual(battery.map(\.charging), [false, true])
         checkEqual(try BatteryEntry.parse(bytes("01 03 FF")).first?.percent, nil)
         checkThrows(try BatteryEntry.parse(bytes("03 01 64 02 64")))
-        checkEqual(try NoiseState.parse(bytes("01 01 08 00")).capturedMode, .on)
-        checkEqual(try NoiseState.parse(bytes("01 01 00 01")).capturedMode, .off)
-        checkEqual(try NoiseState.parse(bytes("01 01 10 00")).capturedMode, .transparency)
+        checkEqual(try NoiseState.parse(bytes("01 01 08 00")).capturedMode, .off)
+        checkEqual(try NoiseState.parse(bytes("01 01 00 01")).capturedMode, .transparency)
+        checkEqual(try NoiseState.parse(bytes("01 01 10 00")).capturedMode, .on)
         checkEqual(try NoiseState.parse(bytes("01 01 20 00")).capturedMode, nil)
         let versions = try VersionComponent.parse([4] + Array("1,2,158,2,2,158,3,1,01,3,2,105".utf8))
         checkEqual(versions.map(\.value), ["158", "158", "01", "105"])
@@ -149,19 +149,19 @@ final class ProtocolChecks {
         checkEqual(outgoing.last?.command, 0x010C)
         try reply(bytes("00 01 01 00 01"))
         checkEqual(outgoing.last?.command, 0x0404)
-        checkEqual(outgoing.last?.payload, [1, 1, 1])
-        session.receive(try Packet(command: 0x0204, sequence: 0x4C, payload: bytes("03 01 01 08 00")).encoded())
+        checkEqual(outgoing.last?.payload, [1, 1, 2])
+        session.receive(try Packet(command: 0x0204, sequence: 0x4C, payload: bytes("03 01 01 10 00")).encoded())
         checkEqual(device.noiseState?.capturedMode, .on)
         checkEqual(actual, nil)
         try reply([0])
         checkEqual(outgoing.last?.command, 0x010C)
         checkEqual(outgoing.last?.payload, [1, 1])
         checkEqual(actual, nil)
-        try reply(bytes("00 01 01 08 00"))
+        try reply(bytes("00 01 01 10 00"))
         checkEqual(actual?.capturedMode, .on)
         let writesBefore = outgoing.filter { $0.command == 0x0404 }.count
         device.setANC(.on) { actual = $0 }
-        try reply(bytes("00 01 01 08 00"))
+        try reply(bytes("00 01 01 10 00"))
         checkEqual(outgoing.filter { $0.command == 0x0404 }.count, writesBefore)
         session.cancel()
     }
