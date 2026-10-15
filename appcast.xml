@@ -6,13 +6,13 @@
     <description>Enco for macOS</description>
     <language>en</language>
     <item>
-      <title>Enco 0.2.3</title>
+      <title>Enco 0.2.4</title>
       <pubDate>Thu, 15 Oct 2026 12:00:00 +0000</pubDate>
-      <sparkle:version>5</sparkle:version>
-      <sparkle:shortVersionString>0.2.3</sparkle:shortVersionString>
+      <sparkle:version>6</sparkle:version>
+      <sparkle:shortVersionString>0.2.4</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <description>Correct ANC, OFF and Transparency command mapping and reported mode highlighting.</description>
-      <enclosure url="https://github.com/OutTuna/Cracked-Oneplus_buds/releases/download/v0.2.3/Enco-0.2.3-macOS-arm64.zip" sparkle:edSignature="oz29Jngfc+qUinwQcBH4lpUiXlb9cv8hrLheSgtWz8nbt6sN9CSXWMree2oBOrgB2d1seKTpYUrTrPhimlc1Dg==" length="10355232" type="application/octet-stream"/>
+      <description>Center the menu bar icon and both battery lines as a single aligned item.</description>
+      <enclosure url="https://github.com/OutTuna/Cracked-Oneplus_buds/releases/download/v0.2.4/Enco-0.2.4-macOS-arm64.zip" sparkle:edSignature="jYlWfjDvAH673kx1YQyx7uMvm7AHwFu3nOZod81kjTVJlMKvVlngU6VS9WIGfmQDeuhlhbq0+N313rIgvXehAg==" length="10356407" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>

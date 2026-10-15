@@ -41,6 +41,24 @@ enum Artwork {
         return image
     }
 
+    static func statusIcon(_ style: MenuBarIcon, left: String, right: String) -> NSImage {
+        let font = NSFont.monospacedDigitSystemFont(ofSize: 9, weight: .medium)
+        let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.black]
+        let lines = ["L \(left)", "R \(right)"]
+        let textWidth = ceil(lines.map { ($0 as NSString).size(withAttributes: attributes).width }.max() ?? 0)
+        let image = NSImage(size: NSSize(width: 28 + textWidth, height: 22), flipped: false) { _ in
+            icon(style).draw(in: NSRect(x: 0, y: 2, width: 23, height: 18))
+            for (index, line) in lines.enumerated() {
+                let size = (line as NSString).size(withAttributes: attributes)
+                let center: CGFloat = index == 0 ? 16 : 6
+                (line as NSString).draw(at: NSPoint(x: 28, y: center - size.height / 2), withAttributes: attributes)
+            }
+            return true
+        }
+        image.isTemplate = true
+        return image
+    }
+
     static func exportIcon(to url: URL, finish: EarbudFinish = .pearlWhite) throws {
         let size = NSSize(width: 1024, height: 1024)
         let image = NSImage(size: size)
